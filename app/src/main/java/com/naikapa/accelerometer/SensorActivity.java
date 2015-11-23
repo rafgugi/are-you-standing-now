@@ -1,42 +1,39 @@
 package com.naikapa.accelerometer;
 
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
-import android.view.Menu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class SensorActivity extends Activity implements SensorEventListener {
-    
+public class SensorActivity extends Activity {
+
     private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
 
-    private HumanState state;
-    private int counter;
-    private ArrayList<Axis> myAxis;
+    public TextView title, tx, ty, tz;
+    public TextView tSit, tStand;
+    public TextView tState;
 
-    private TextView title,tx,ty,tz;
-    private TextView tSit, tStand;
-    private TextView tState;
-    private RelativeLayout layout;
+    public TextView lightTitle;
+    public TextView lightStatus;
 
     private String name;
 
-    private Connection connection;
+    private AccelerometerListener accelerometer;
+    private LightListener light;
+
+    public boolean isBright;
 
     public SensorActivity() {
-        state = new HumanState(5);
-        counter = 0;
-        myAxis = new ArrayList<>();
         name = "Cuppy Cake";
-        connection = new Connection();
+
+        accelerometer = new AccelerometerListener(this);
+        light = new LightListener(this);
+
+        isBright = false;
     }
 
     @Override
@@ -45,71 +42,45 @@ public class SensorActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_read_accelerometer);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        // get layout
-        layout = (RelativeLayout)findViewById(R.id.relative);
+        accelerometer.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+        light.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
 
-        // get textviews
-        title=(TextView)findViewById(R.id.name);
-        tx=(TextView)findViewById(R.id.xval);
-        ty=(TextView)findViewById(R.id.yval);
-        tz=(TextView)findViewById(R.id.zval);
+        title = (TextView) findViewById(R.id.name);
 
-        tSit=(TextView)findViewById(R.id.sitaxis);
-        tStand=(TextView)findViewById(R.id.standaxis);
-        tState=(TextView)findViewById(R.id.state);
+        tx = (TextView) findViewById(R.id.xval);
+        ty = (TextView) findViewById(R.id.yval);
+        tz = (TextView) findViewById(R.id.zval);
 
-//        tSit.setText("Average sit = " + state.average(state.sitstate));
-//        tStand.setText("Average stand = " + state.average(state.standstate));
+        tSit = (TextView) findViewById(R.id.sitaxis);
+        tStand = (TextView) findViewById(R.id.standaxis);
+        tState = (TextView) findViewById(R.id.state);
+
+        lightTitle = (TextView) findViewById(R.id.lightname);
+        lightStatus = (TextView) findViewById(R.id.lightstatus);
+
+        title.setText("Accelerometer");
+        lightTitle.setText("Light");
+
+        if (light != null) {
+            lightStatus.setText("Sensor.TYPE_LIGHT Available");
+        } else {
+            lightStatus.setText("Sensor.TYPE_LIGHT NOT Available");
+        }
     }
 
     @Override
-    public final void onAccuracyChanged(Sensor sensor, int accuracy) { }
-
-    @Override
-    public final void onSensorChanged(SensorEvent event)
-    {
-        // ngefilter, bisa aja ngecek sensor cahaya.
-        if (!SensorFilter.filter(event)) {
-            return;
-        }
-
-        if (counter == state.treshold) {
-            String hasil = state.determineState(myAxis);
-            tState.setText(hasil);
-            // ngirim ke server
-            connection.send(name, hasil);
-
-            myAxis.clear();
-            counter = 0;
-        }
-        // Many sensors return 3 values, one for each axis.
-        float x =  event.values[0];
-        float y =  event.values[1];
-        float z =  event.values[2];
-
-        //display values using TextView
-        title.setText(R.string.app_name);
-        tx.setText("X axis" + "\t\t" + x);
-        ty.setText("Y axis" + "\t\t" + y);
-        tz.setText("Z axis" + "\t\t" + z);
-
-        myAxis.add(new Axis(x, y, z));
-        counter++;
-    }
-
-    @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(accelerometer, accelerometer.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(light, light.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        mSensorManager.unregisterListener(accelerometer);
+        mSensorManager.unregisterListener(light);
     }
 
     public void setName(String name) {

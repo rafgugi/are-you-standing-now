@@ -5,12 +5,12 @@ package com.naikapa.accelerometer;
  */
 public class Connection {
 
-    public void send(String name, String state, Object other) {
+    public static void send(String name, String state, Object other) {
         // ngirim data nama dan state ke server. ga tau servernya gimana
     }
 
-    public void send(String name, String state) {
-        this.send(name, state, null);
+    public static void send(String name, String state) {
+        Connection.send(name, state, null);
     }
 
 }

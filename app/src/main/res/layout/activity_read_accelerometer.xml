@@ -6,58 +6,75 @@
     android:id="@+id/relative">
 
     <TextView
-        android:textSize="30dp"
         android:id="@+id/name"
+        android:textSize="30dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         />
 
     <TextView
-        android:textSize="20dp"
-        android:layout_below="@+id/name"
         android:id="@+id/xval"
+        android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
         />
 
     <TextView
-        android:textSize="20dp"
         android:id="@+id/yval"
+        android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/xval"
         />
 
     <TextView
-        android:textSize="20dp"
         android:id="@+id/zval"
+        android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/yval"
         />
 
     <TextView
-        android:textSize="20dp"
         android:id="@+id/sitaxis"
+        android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/zval"
         />
 
     <TextView
-        android:textSize="20dp"
         android:id="@+id/standaxis"
+        android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sitaxis"
         />
 
     <TextView
-        android:textSize="20dp"
         android:id="@+id/state"
+        android:textSize="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/standaxis"
+        />
+
+    <TextView
+        android:id="@+id/lightname"
+        android:layout_marginTop="40dp"
+        android:textSize="30dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/state"
+        />
+
+    <TextView
+        android:id="@+id/lightstatus"
+        android:textSize="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lightname"
         />
 
 </RelativeLayout>
