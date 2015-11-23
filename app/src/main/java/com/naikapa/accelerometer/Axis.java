@@ -12,9 +12,9 @@ public class Axis {
     public float z;
 
     public Axis(float x, float y, float z){
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.x = x < 0 ? -x : x;
+        this.y = y < 0 ? -y : y;
+        this.z = z < 0 ? -z : z;
     }
 
     public Axis(double x, double y, double z) {
