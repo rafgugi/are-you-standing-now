@@ -21,15 +21,21 @@ public class ReadAccelerometer extends Activity implements SensorEventListener {
     private int counter;
     private ArrayList<Axis> myAxis;
 
-    TextView title,tx,ty,tz;
-    TextView tSit, tStand;
-    TextView tState;
-    RelativeLayout layout;
+    private TextView title,tx,ty,tz;
+    private TextView tSit, tStand;
+    private TextView tState;
+    private RelativeLayout layout;
+
+    private String name;
+
+    private Connection connection;
 
     public ReadAccelerometer() {
         state = new HumanState(5);
         counter = 0;
         myAxis = new ArrayList<>();
+        name = "Cuppy Cake";
+        connection = new Connection();
     }
 
     @Override
@@ -63,9 +69,16 @@ public class ReadAccelerometer extends Activity implements SensorEventListener {
     @Override
     public final void onSensorChanged(SensorEvent event)
     {
+        // ngefilter, bisa aja ngecek sensor cahaya.
+        if (!SensorFilter.filter(event)) {
+            return;
+        }
+
         if (counter == state.treshold) {
             String hasil = state.determineState(myAxis);
             tState.setText(hasil);
+            // ngirim ke server
+            connection.send(name, hasil);
 
             myAxis.clear();
             counter = 0;
@@ -97,4 +110,13 @@ public class ReadAccelerometer extends Activity implements SensorEventListener {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
 }

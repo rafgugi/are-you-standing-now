@@ -25,20 +25,6 @@ public class HumanState {
         this(24);
     }
 
-    public static Axis average(ArrayList<Axis> data) {
-        Axis ans = new Axis(0, 0, 0);
-        for (Axis axis : data) {
-            ans.x = ans.x + axis.x;
-            ans.y = ans.y + axis.z;
-            ans.z = ans.z + axis.z;
-        }
-        ans.x = ans.x / data.size();
-        ans.y = ans.y / data.size();
-        ans.z = ans.z / data.size();
-
-        return ans;
-    }
-
     public void initSitDataset() {
         sitstate.add(new Axis(-1.019, -2.118, 9.198));
         sitstate.add(new Axis(-1.078, -2.177, 9.218));
@@ -94,9 +80,9 @@ public class HumanState {
     }
 
     public String determineState(ArrayList<Axis> data) {
-        Axis avg = average(data);
-        Axis avgsit = average(sitstate);
-        Axis avgstand = average(standstate);
+        Axis avg = Axis.average(data);
+        Axis avgsit = Axis.average(sitstate);
+        Axis avgstand = Axis.average(standstate);
 
         double sit = Math.sqrt(Math.pow(avg.x - avgsit.x, 2) + Math.pow(avg.y - avgsit.y, 2) + Math.pow(avg.z - avgsit.z, 2));
         double stand = Math.sqrt(Math.pow(avg.x - avgstand.x, 2) + Math.pow(avg.y - avgstand.y, 2) + Math.pow(avg.z - avgstand.z, 2));

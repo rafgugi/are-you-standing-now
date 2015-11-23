@@ -1,9 +1,11 @@
 package com.naikapa.accelerometer;
 
+import java.util.ArrayList;
+
 /**
  * Created by sg on 11/10/2015.
  */
-public class Axis implements Comparable {
+public class Axis {
 
     public float x;
     public float y;
@@ -19,9 +21,18 @@ public class Axis implements Comparable {
         this((float) x, (float) y, (float) z);
     }
 
-    @Override
-    public int compareTo(Object another) {
-        return 0;
+    public static Axis average(ArrayList<Axis> data) {
+        Axis ans = new Axis(0, 0, 0);
+        for (Axis axis : data) {
+            ans.x = ans.x + axis.x;
+            ans.y = ans.y + axis.z;
+            ans.z = ans.z + axis.z;
+        }
+        ans.x = ans.x / data.size();
+        ans.y = ans.y / data.size();
+        ans.z = ans.z / data.size();
+
+        return ans;
     }
 
     @Override
