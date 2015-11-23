@@ -13,7 +13,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ReadAccelerometer extends Activity implements SensorEventListener {
+public class SensorActivity extends Activity implements SensorEventListener {
+    
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
 
@@ -30,7 +31,7 @@ public class ReadAccelerometer extends Activity implements SensorEventListener {
 
     private Connection connection;
 
-    public ReadAccelerometer() {
+    public SensorActivity() {
         state = new HumanState(5);
         counter = 0;
         myAxis = new ArrayList<>();
