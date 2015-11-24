@@ -3,11 +3,7 @@ package com.naikapa.accelerometer;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 
-/**
- * Created by sg on 11/23/2015.
- */
 public class LightListener implements SensorEventListener {
 
     private SensorActivity activity;
@@ -20,9 +16,13 @@ public class LightListener implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            activity.lightStatus.setText("LIGHT: " + event.values[0]);
+            int lux = (int) event.values[0];
+            activity.lightStatus.setText("LIGHT: " + lux);
 
-            activity.isBright = event.values[0] > 6.0;
+            boolean isBright = lux > 10;
+            activity.isBright = isBright;
+
+            activity.lightTitle.setText(isBright ? "Bright" : "Dark");
         }
     }
 

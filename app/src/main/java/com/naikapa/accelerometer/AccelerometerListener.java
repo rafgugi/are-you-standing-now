@@ -3,12 +3,8 @@ package com.naikapa.accelerometer;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-
 import java.util.ArrayList;
 
-/**
- * Created by sg on 11/23/2015.
- */
 public class AccelerometerListener implements SensorEventListener {
 
     private SensorActivity activity;

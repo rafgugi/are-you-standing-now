@@ -82,7 +82,7 @@ public class HumanState {
     public String determineState(ArrayList<Axis> data) {
         Axis avg = Axis.average(data);
 
-        /* Old method *
+        /* Old method */
         Axis avgsit = Axis.average(sitstate);
         Axis avgstand = Axis.average(standstate);
 
@@ -91,10 +91,13 @@ public class HumanState {
 
         return sit < stand ? "Sit" : "Stand";
         //*/
+
+        /* Cara ngawur *
         if (avg.z >= 5) {
             return "Sit";
         } else {
             return "Stand";
         }
+        //*/
     }
 }
