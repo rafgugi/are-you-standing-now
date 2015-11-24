@@ -29,6 +29,7 @@ public class AccelerometerListener implements SensorEventListener {
             activity.tx.setText("");
             activity.ty.setText("");
             activity.tz.setText("");
+            activity.tState.setText("");
 
             return;
         }

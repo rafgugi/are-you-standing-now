@@ -11,6 +11,9 @@ public class HumanState {
     public ArrayList<Axis> standstate;
     public int treshold;
 
+    public static final String SIT = "Sitting";
+    public static final String STAND = "Standing";
+
     public HumanState(int treshold) {
         sitstate = new ArrayList<>();
         standstate = new ArrayList<>();
@@ -89,7 +92,7 @@ public class HumanState {
         double sit = Math.sqrt(Math.pow(avg.x - avgsit.x, 2) + Math.pow(avg.y - avgsit.y, 2) + Math.pow(avg.z - avgsit.z, 2));
         double stand = Math.sqrt(Math.pow(avg.x - avgstand.x, 2) + Math.pow(avg.y - avgstand.y, 2) + Math.pow(avg.z - avgstand.z, 2));
 
-        return sit < stand ? "Sit" : "Stand";
+        return sit < stand ? SIT : STAND;
         //*/
 
         /* Cara ngawur *

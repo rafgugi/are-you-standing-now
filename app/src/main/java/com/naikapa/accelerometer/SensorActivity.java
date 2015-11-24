@@ -43,8 +43,13 @@ public class SensorActivity extends Activity {
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
+        /* initialize Sensor foreach sensorlistener */
         accelerometer.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         light.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
+
+        /* register listener */
+        mSensorManager.registerListener(accelerometer, accelerometer.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(light, light.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
 
         title = (TextView) findViewById(R.id.name);
 
@@ -72,15 +77,11 @@ public class SensorActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(accelerometer, accelerometer.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(light, light.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(accelerometer);
-        mSensorManager.unregisterListener(light);
     }
 
     public void setName(String name) {

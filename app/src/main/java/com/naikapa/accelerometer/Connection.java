@@ -6,7 +6,8 @@ package com.naikapa.accelerometer;
 public class Connection {
 
     public static void send(String name, String state, Object other) {
-        // ngirim data nama dan state ke server. ga tau servernya gimana
+        String url = "http://10.151.36.32:3000/sensor?status=" + state;
+        new Record().execute(url);
     }
 
     public static void send(String name, String state) {
