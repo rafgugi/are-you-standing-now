@@ -71,12 +71,22 @@ public class Bayes {
      */
     public double[] getDataFromRaw() {
         vals = new double[data.numAttributes()];
+        int n = sensorData.length
         vals[0] = 1;
         vals[1] = 1;
         vals[35] = 0; // nilai max x
         vals[36] = 0; // nilai max y
         vals[37] = 0; // nilai max z
-        for (int i = 0; i < sensorData.length; i++) {
+        vals[38] = 0; // absol dev x
+        vals[39] = 0; // absol dev y
+        vals[40] = 0; // absol dev z
+        vals[41] = 0; // std dev x
+        vals[42] = 0; // std dev y
+        vals[43] = 0; // std dev z
+        vals[44] = 0; // resultan
+
+        Axis avg = Axis.average(sensorData);
+        for (int i = 0; i < n; i++) {
             Axis axis = sensorData.get(i);
             if (i < 10) {
                 vals[2 + i] = axis.x;
@@ -92,11 +102,24 @@ public class Bayes {
             if (axis.z > vals[37]) {
                 vals[37] = axis.z
             }
+
+            vals[38] += Math.abs(axis.x - avg.x); // absol dev x
+            vals[39] += Math.abs(axis.y - avg.y); // absol dev y
+            vals[40] += Math.abs(axis.z - avg.z); // absol dev z
+            vals[41] += Math.pow(axis.x - avg.x, 2); // std dev x
+            vals[42] += Math.pow(axis.y - avg.y, 2); // std dev y
+            vals[43] += Math.pow(axis.z - avg.z, 2); // std dev z
         }
-        Axis avg = Axis.average(sensorData);
         vals[32] = avg.x;
         vals[33] = avg.y;
         vals[34] = avg.z;
+        vals[38] /= n; // absol dev x
+        vals[39] /= n; // absol dev y
+        vals[40] /= n; // absol dev z
+        vals[41] = Math.sqrt(vals[41]) / n; // std dev x
+        vals[42] = Math.sqrt(vals[42]) / n; // std dev y
+        vals[43] = Math.sqrt(vals[43]) / n; // std dev z
+        vals[44] = Math.sqrt(avg.x * avg.x + avg.y * avg.y + avg.z * avg.z);
 
         return vals;
     }
@@ -105,11 +128,13 @@ public class Bayes {
      * Proses ngitung dengan data training dan dataset
      */
     public String bayes() {
+        /* Data boleh lebih dari 10, tapi ga boleh kurang*/
         if (sensorData.length < 10) {
             return "Data sensor masih kurang dari 10 (" + sensorData.length + ")";
         }
 
-        /* proses dulu sensor data nya menjadi data sesuai data set attribute lengkap */
+        /* proses dulu sensor data nya menjadi data sesuai data set attribute
+         * lengkap */
         double[] vals = getDataFromRaw();
         test.delete(0);
         test.add(new Instances(1.0, vals));
