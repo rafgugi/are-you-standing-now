@@ -34,15 +34,6 @@ public class AccelerometerListener implements SensorEventListener {
             return;
         }
 
-        if (counter == state.treshold) {
-            String hasil = state.determineState(myAxis);
-            activity.tState.setText(hasil);
-            // ngirim ke server
-            Connection.send(activity.getName(), hasil);
-
-            myAxis.clear();
-            counter = 0;
-        }
         // Many sensors return 3 values, one for each axis.
         float x = event.values[0];
         float y = event.values[1];

@@ -1,15 +1,17 @@
 package com.naikapa.accelerometer;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-public class SensorActivity extends Activity {
+public class SensorActivity extends AppCompatActivity {
 
     private SensorManager mSensorManager;
 
@@ -24,6 +26,12 @@ public class SensorActivity extends Activity {
 
     private AccelerometerListener accelerometer;
     private LightListener light;
+
+    private Button btn_record;
+    private Button btn_train;
+    private Button btn_test;
+
+    private ProgressBar pb_accelero;
 
     public boolean isBright;
 
@@ -47,15 +55,11 @@ public class SensorActivity extends Activity {
         accelerometer.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         light.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
 
-        /* register listener */
-        mSensorManager.registerListener(accelerometer, accelerometer.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(light, light.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
-
         title = (TextView) findViewById(R.id.name);
 
-        tx = (TextView) findViewById(R.id.xval);
-        ty = (TextView) findViewById(R.id.yval);
-        tz = (TextView) findViewById(R.id.zval);
+        tx = (TextView) findViewById(R.id.tv_xval);
+        ty = (TextView) findViewById(R.id.tv_yval);
+        tz = (TextView) findViewById(R.id.tv_zval);
 
         tSit = (TextView) findViewById(R.id.sitaxis);
         tStand = (TextView) findViewById(R.id.standaxis);
@@ -63,6 +67,12 @@ public class SensorActivity extends Activity {
 
         lightTitle = (TextView) findViewById(R.id.lightname);
         lightStatus = (TextView) findViewById(R.id.lightstatus);
+
+        btn_record = (Button) findViewById(R.id.btn_record);
+        btn_test = (Button) findViewById(R.id.btn_test);
+        btn_train = (Button) findViewById(R.id.btn_train);
+
+        pb_accelero = (ProgressBar)findViewById(R.id.pb_accelero);
 
         title.setText("Accelerometer");
         lightTitle.setText("Light");
@@ -72,6 +82,43 @@ public class SensorActivity extends Activity {
         } else {
             lightStatus.setText("Sensor.TYPE_LIGHT NOT Available");
         }
+
+        setOnClick();
+    }
+
+    protected void setOnClick() {
+        btn_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String status = btn_record.getText().toString();
+                switch(status){
+                    case "Record":
+                        registerListener();
+                        btn_record.setText("Stop");
+                        pb_accelero.setVisibility(View.VISIBLE);
+                        break;
+                    case "Stop":
+                        unRegisterListener();
+                        btn_record.setText("Record");
+                        pb_accelero.setVisibility(View.GONE);
+                        break;
+                    default :
+                        Log.d("error", "gagal record");
+                }
+            }
+        });
+        btn_train.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // train the dataset with trainer method
+            }
+        });
+        btn_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // test the data based on trainer result
+            }
+        });
     }
 
     @Override
@@ -90,6 +137,19 @@ public class SensorActivity extends Activity {
 
     public String getName() {
         return this.name;
+    }
+
+    private void registerListener(){
+        /* register listener */
+        mSensorManager.registerListener(accelerometer, accelerometer.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(light, light.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
+
+    }
+
+    private void unRegisterListener(){
+        mSensorManager.unregisterListener(accelerometer);
+        mSensorManager.unregisterListener(light);
+
     }
 
 }
