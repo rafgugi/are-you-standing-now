@@ -15,15 +15,15 @@ public class LightListener implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            int lux = (int) event.values[0];
-            activity.lightStatus.setText("LIGHT: " + lux);
-
-            boolean isBright = lux > 10;
-            activity.isBright = isBright;
-
-            activity.lightTitle.setText(isBright ? "Bright" : "Dark");
-        }
+//        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+//            int lux = (int) event.values[0];
+//            activity.lightStatus.setText("LIGHT: " + lux);
+//
+//            boolean isBright = lux > 10;
+//            activity.isBright = isBright;
+//
+//            activity.lightTitle.setText(isBright ? "Bright" : "Dark");
+//        }
     }
 
     @Override

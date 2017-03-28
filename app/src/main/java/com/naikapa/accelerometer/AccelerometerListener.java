@@ -3,7 +3,8 @@ package com.naikapa.accelerometer;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import java.util.ArrayList;
+
+import com.naikapa.accelerometer.clasifier.Bayes;
 
 public class AccelerometerListener implements SensorEventListener {
 
@@ -12,14 +13,12 @@ public class AccelerometerListener implements SensorEventListener {
 
     private HumanState state;
     private int counter;
-    private ArrayList<Axis> myAxis;
 
     public AccelerometerListener(SensorActivity activity) {
         this.activity = activity;
 
         state = new HumanState(5);
         counter = 0;
-        myAxis = new ArrayList<>();
     }
 
     @Override
@@ -34,15 +33,6 @@ public class AccelerometerListener implements SensorEventListener {
             return;
         }
 
-        if (counter == state.treshold) {
-            String hasil = state.determineState(myAxis);
-            activity.tState.setText(hasil);
-            // ngirim ke server
-            Connection.send(activity.getName(), hasil);
-
-            myAxis.clear();
-            counter = 0;
-        }
         // Many sensors return 3 values, one for each axis.
         float x = event.values[0];
         float y = event.values[1];
@@ -53,7 +43,7 @@ public class AccelerometerListener implements SensorEventListener {
         activity.ty.setText("Y axis" + "\t\t" + y);
         activity.tz.setText("Z axis" + "\t\t" + z);
 
-        myAxis.add(new Axis(x, y, z));
+        Bayes.getInstance().record(x, y, z);
         counter++;
     }
 
