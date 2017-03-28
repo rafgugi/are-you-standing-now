@@ -21,6 +21,7 @@ public class Bayes {
     private static Bayes instance;
     private Instances train, test;
     private double label;
+    private boolean acceptData = true;
     private ArrayList<Axis> sensorData = new ArrayList<>();
 
     private Bayes() {
@@ -46,7 +47,24 @@ public class Bayes {
      * Masukan data sensor ke record
      */
     public void record(Axis axis) {
-        sensorData.add(axis);
+        if (acceptData) {
+            sensorData.add(axis);
+        }
+    }
+
+    /**
+     * Hapus smua data rekaman.
+     */
+    public void resetData() {
+        sensorData.clear();
+    }
+
+    public void start() {
+        acceptData = true;
+    }
+
+    public void stop() {
+        acceptData = false;
     }
 
     /**
