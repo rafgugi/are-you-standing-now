@@ -1,5 +1,6 @@
 package com.naikapa.accelerometer.clasifier;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.naikapa.accelerometer.Axis;
@@ -23,10 +24,14 @@ public class Bayes {
     private double label;
     private boolean acceptData = true;
     private ArrayList<Axis> sensorData = new ArrayList<>();
+    private String currentPath;
+    private Uri trainFile, testFile;
 
     private Bayes() {
-        train = fileToInstances("\\database\\dataset.arff");
-        test = fileToInstances("\\database\\template.arff");
+        trainFile = Uri.parse("android.resource://com.naikapa.accelerometer/res/raw/dataset.arff");
+        testFile = Uri.parse("android.resource://com.naikapa.accelerometer/res/raw/template.arff");
+        train = fileToInstances(trainFile.toString());
+        test = fileToInstances(testFile.toString());
     }
 
     public static Bayes getInstance() {
@@ -72,18 +77,16 @@ public class Bayes {
      * root aplikasi.
      */
     public Instances fileToInstances(String path) {
-        String currentPath = System.getProperty("user.dir");
-        String csvFile = currentPath + path;
         Instances dataset = null;
 
         try {
-            ConverterUtils.DataSource source = new ConverterUtils.DataSource(csvFile);
+            ConverterUtils.DataSource source = new ConverterUtils.DataSource(path);
             dataset = source.getDataSet();
 
-            if (dataset.classIndex() == -1){
+            if (dataset.classIndex() == -1) {
                 dataset.setClassIndex(dataset.numAttributes() - 1);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d("error", e.toString());
         }
         return new Instances(dataset);
@@ -152,17 +155,21 @@ public class Bayes {
      */
     public String bayes() {
         /* Data boleh lebih dari 10, tapi ga boleh kurang*/
+
         if (sensorData.size() < 10) {
             return "Data sensor masih kurang dari 10 (" + sensorData.size() + ")";
         }
 
         /* proses dulu sensor data nya menjadi data sesuai data set attribute
          * lengkap */
-        double[] vals = getDataFromRaw();
-        test.delete(0);
-        test.add(new DenseInstance(1.0, vals));
+
 
         try {
+            double[] vals = getDataFromRaw();
+            Log.d("vals", vals.toString());
+            test.delete(0);
+            test.add(new DenseInstance(1.0, vals));
+
             NaiveBayes naiveBayes = new NaiveBayes();
             naiveBayes.buildClassifier(train);
 
@@ -174,12 +181,12 @@ public class Bayes {
             label = naiveBayes.classifyInstance(test.instance(0));
             test.instance(0).setClassValue(label);
 
-            Log.d("Prediction", "Class predicted : " + test.classAttribute().value((int)label));
+            Log.d("Prediction", "Class predicted : " + test.classAttribute().value((int) label));
 
         } catch (Exception e) {
             Log.d("error", e.toString());
         }
 
-        return test.classAttribute().value((int)label);
+        return test.classAttribute().value((int) label);
     }
 }

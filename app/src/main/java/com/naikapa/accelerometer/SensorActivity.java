@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.naikapa.accelerometer.clasifier.Bayes;
 
+import java.io.InputStream;
+
 public class SensorActivity extends AppCompatActivity {
 
     private SensorManager mSensorManager;
@@ -24,6 +26,8 @@ public class SensorActivity extends AppCompatActivity {
 
     private String name;
     private String result;
+    private String testFile;
+    private String trainFile;
 
     private AccelerometerListener accelerometer;
     private LightListener light;
@@ -35,13 +39,13 @@ public class SensorActivity extends AppCompatActivity {
     private ProgressBar pb_accelero;
 
     public boolean isBright;
+    public Bayes bayes;
 
     public SensorActivity() {
         name = "Cuppy Cake";
-
         accelerometer = new AccelerometerListener(this);
         light = new LightListener(this);
-
+        bayes = Bayes.getInstance();
         isBright = false;
     }
 
@@ -49,12 +53,11 @@ public class SensorActivity extends AppCompatActivity {
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_accelerometer);
-
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
         /* initialize Sensor foreach sensorlistener */
         accelerometer.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         light.setSensor(mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
+//        bayes.getInstance();
 
         title = (TextView) findViewById(R.id.name);
 
@@ -62,13 +65,15 @@ public class SensorActivity extends AppCompatActivity {
         ty = (TextView) findViewById(R.id.tv_yval);
         tz = (TextView) findViewById(R.id.tv_zval);
 
-        tv_status = (TextView)findViewById(R.id.status);
+        tv_status = (TextView) findViewById(R.id.status);
 
         btn_record = (Button) findViewById(R.id.btn_record);
         btn_test = (Button) findViewById(R.id.btn_test);
         btn_train = (Button) findViewById(R.id.btn_train);
 
-        pb_accelero = (ProgressBar)findViewById(R.id.pb_accelero);
+        pb_accelero = (ProgressBar) findViewById(R.id.pb_accelero);
+
+        InputStream stream = getResources().openRawResource(R.raw.dataset);
 
         title.setText("Accelerometer");
 
@@ -80,20 +85,22 @@ public class SensorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String status = btn_record.getText().toString();
-                switch(status){
+                switch (status) {
                     case "Record":
                         registerListener();
                         btn_record.setText("Stop");
                         pb_accelero.setVisibility(View.VISIBLE);
-                        result = Bayes.getInstance().bayes();
+                        bayes.start();
                         break;
                     case "Stop":
+                        bayes.stop();
+                        result = bayes.bayes();
                         unRegisterListener();
                         btn_record.setText("Record");
                         pb_accelero.setVisibility(View.GONE);
                         tv_status.setText(result);
                         break;
-                    default :
+                    default:
                         Log.d("error", "gagal record");
                 }
             }
@@ -130,14 +137,14 @@ public class SensorActivity extends AppCompatActivity {
         return this.name;
     }
 
-    private void registerListener(){
+    private void registerListener() {
         /* register listener */
         mSensorManager.registerListener(accelerometer, accelerometer.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(light, light.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
-    private void unRegisterListener(){
+    private void unRegisterListener() {
         mSensorManager.unregisterListener(accelerometer);
         mSensorManager.unregisterListener(light);
 

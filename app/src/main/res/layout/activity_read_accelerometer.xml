@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/relative">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,25 +22,25 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Name :"/>
+                android:text="Name :" />
 
             <TextView
                 android:id="@+id/name"
-                android:textSize="24sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Human"/>
+                android:text="Human"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="14sp"
-            android:text="val"
-            android:gravity="center"/>
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="AXIS"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,24 +49,24 @@
 
             <TextView
                 android:id="@+id/tv_xval"
-                android:textSize="14sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="x_axis" />
 
             <TextView
                 android:id="@+id/tv_yval"
-                android:textSize="14sp"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="y_axis" />
 
             <TextView
                 android:id="@+id/tv_zval"
-                android:textSize="14sp"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="z_axis" />
 
         </LinearLayout>
 
@@ -78,7 +78,10 @@
             <TextView
                 android:id="@+id/status"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:text="RESULT" />
 
         </LinearLayout>
 
@@ -87,41 +90,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="20dp">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_record"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/btn_record_text"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/btn_record_text" />
 
         <Button
             android:id="@+id/btn_train"
-            android:text="@string/btn_train_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/btn_train_text" />
 
         <Button
             android:id="@+id/btn_test"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/btn_test_text"/>
+            android:text="@string/btn_test_text" />
 
-        </LinearLayout>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/pb_accelero"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>
