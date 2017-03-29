@@ -20,18 +20,16 @@ import weka.core.converters.ConverterUtils;
 public class Bayes {
 
     private static Bayes instance;
+    private InputStream trainStream, testStream;
     private Instances train, test;
     private double label;
     private boolean acceptData = true;
     private ArrayList<Axis> sensorData = new ArrayList<>();
     private String currentPath;
     private Uri trainFile, testFile;
+    private boolean fileExist = false;
 
     private Bayes() {
-        trainFile = Uri.parse("android.resource://com.naikapa.accelerometer/res/raw/dataset.arff");
-        testFile = Uri.parse("android.resource://com.naikapa.accelerometer/res/raw/template.arff");
-        train = fileToInstances(trainFile.toString());
-        test = fileToInstances(testFile.toString());
     }
 
     public static Bayes getInstance() {
@@ -39,6 +37,14 @@ public class Bayes {
             instance = new Bayes();
         }
         return instance;
+    }
+
+    public void setTrain(InputStream stream) {
+        trainStream = stream;
+    }
+
+    public void setTest(InputStream stream) {
+        testStream = stream;
     }
 
     /**
@@ -76,11 +82,14 @@ public class Bayes {
      * Ngubah dari file path menjadi Instances. Root directorynya ada di
      * root aplikasi.
      */
-    public Instances fileToInstances(String path) {
+    public Instances fileToInstances(InputStream stream) {
         Instances dataset = null;
 
         try {
-            ConverterUtils.DataSource source = new ConverterUtils.DataSource(path);
+            // InputStream ins = getResources().openRawResource(
+            //     getResources().getIdentifier(path, "raw", getPackageName()));
+            // ConverterUtils.DataSource source = new ConverterUtils.DataSource(ins);
+            ConverterUtils.DataSource source = new ConverterUtils.DataSource(stream);
             dataset = source.getDataSet();
 
             if (dataset.classIndex() == -1) {
@@ -154,6 +163,15 @@ public class Bayes {
      * Proses ngitung dengan data training dan dataset
      */
     public String bayes() {
+        /* Init, buka file nya */
+        if (!fileExist) {
+            // trainFile = Uri.parse("dataset");
+            // testFile = Uri.parse("template");
+            train = fileToInstances(trainStream);
+            test = fileToInstances(testStream);
+            fileExist = true;
+        }
+
         /* Data boleh lebih dari 10, tapi ga boleh kurang*/
 
         if (sensorData.size() < 10) {
