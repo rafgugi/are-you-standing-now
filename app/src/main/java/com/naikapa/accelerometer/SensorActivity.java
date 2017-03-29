@@ -73,8 +73,11 @@ public class SensorActivity extends AppCompatActivity {
 
         pb_accelero = (ProgressBar) findViewById(R.id.pb_accelero);
 
-        InputStream stream = getResources().openRawResource(R.raw.dataset);
-        bayes.setTrain(strean);
+        InputStream trainstream = getResources().openRawResource(R.raw.dataset);
+        bayes.setTrain(trainstream);
+
+        InputStream teststream = getResources().openRawResource(R.raw.template);
+        bayes.setTest(teststream);
 
         title.setText("Accelerometer");
 
